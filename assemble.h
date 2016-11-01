@@ -14,4 +14,8 @@ int             assemble_stack(
     STACK *stack,
     TEXT_RLD *tr);
 
+    int assemble(
+        STACK *stack,
+        TEXT_RLD *tr);
+
 #endif

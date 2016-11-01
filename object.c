@@ -70,36 +70,37 @@ static int writerec(
     if (fp == NULL)
         return 1;                      /* Silently ignore this attempt to write. */
 
+/*  WHAT IS THIS BITCH?
     chksum = 0;
-    if (fputc(FBR_LEAD1, fp) == EOF)   /* All recs begin with 1,0 */
+    if (fputc(FBR_LEAD1, fp) == EOF)   // All recs begin with 1,0
         return 0;
     chksum -= FBR_LEAD1;
     if (fputc(FBR_LEAD2, fp) == EOF)
         return 0;
     chksum -= FBR_LEAD2;
 
-    i = hdrlen & 0xff;                 /* length, lsb */
+    i = hdrlen & 0xff;                 // length, lsb
     chksum -= i;
     if (fputc(i, fp) == EOF)
         return 0;
 
-    i = (hdrlen >> 8) & 0xff;          /* length, msb */
+    i = (hdrlen >> 8) & 0xff;          // length, msb
     chksum -= i;
     if (fputc(i, fp) == EOF)
         return 0;
-
+*/
     i = fwrite(data, 1, len, fp);
     if (i < len)
         return 0;
 
-    while (len > 0) {                  /* All the data bytes */
+    /*while (len > 0) {
         chksum -= *data++ & 0xff;
         len--;
     }
 
-    chksum &= 0xff;
+    chksum &= 0xff;*/
 
-    fputc(chksum, fp);                 /* Followed by the checksum byte */
+    //fputc(chksum, fp); //<---WHY THE FUCK DO I NEED CHECKSUM??????????????                /* Followed by the checksum byte */
 
     return 1;                          /* Worked okay. */
 }
@@ -271,17 +272,17 @@ void text_init(
 {
     tr->fp = fp;
 
-    tr->text[0] = OBJ_TEXT;            /* text records begin with 3, 0 */
-    tr->text[1] = 0;
-    tr->text[2] = addr & 0xff;         /* and are followed by load address */
-    tr->text[3] = (addr >> 8) & 0xff;
-    tr->txt_offset = 4;                /* Here's where recording new text will begin */
+    //tr->text[0] = 0;//OBJ_TEXT;            /* text records begin with 3, 0 */
+    //tr->text[1] = 0;
+    //tr->text[2] = 0;//addr & 0xff;         /* and are followed by load address */
+    //tr->text[3] = 0;//(addr >> 8) & 0xff;
+    tr->txt_offset = 0; // <----- WHAT IS THIS SHIT?               /* Here's where recording new text will begin */
 
-    tr->rld[0] = OBJ_RLD;              /* RLD records begin with 4, 0 */
+    tr->rld[0] = 0;//OBJ_RLD;              /* RLD records begin with 4, 0 */
     tr->rld[1] = 0;
 
     tr->txt_addr = addr;
-    tr->rld_offset = 2;                /* And are followed by RLD entries */
+    tr->rld_offset = 0;                /* And are followed by RLD entries */
 }
 
 /* text_flush - flushes buffer TEXT and RLD records. */
@@ -289,15 +290,15 @@ void text_init(
 int text_flush(
     TEXT_RLD *tr)
 {
-    if (tr->txt_offset > 4) {
+    //if (tr->txt_offset > 4) {
         if (!writerec(tr->fp, tr->text, tr->txt_offset))
             return 0;
-    }
+    //}
 
-    if (tr->rld_offset > 2) {
+    /*if (tr->rld_offset > 2) {
         if (!writerec(tr->fp, tr->rld, tr->rld_offset))
             return 0;
-    }
+    }*/
 
     return 1;
 }

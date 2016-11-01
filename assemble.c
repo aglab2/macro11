@@ -30,7 +30,7 @@
 /* This function is way way too large, because I just coded most of
    the operation code and pseudo-op handling right in line.  */
 
-static int assemble(
+int assemble(
     STACK *stack,
     TEXT_RLD *tr)
 {
@@ -1492,10 +1492,15 @@ int assemble_stack(
     int             res;
     int             errcount = 0;
 
+    //TEXT_RLD tr_lel;
+    //text_init(tr, NULL, 0);
+
+    //res = assemble(stack, &tr_lel);
+
     while ((res = assemble(stack, tr)) >= 0) {
         list_flush();
         if (res == 0)
-            errcount++;                   /* Count an error */
+            errcount++;
     }
 
     return errcount;

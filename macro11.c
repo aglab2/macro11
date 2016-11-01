@@ -291,11 +291,11 @@ int main(
 
     add_symbols(&blank_section);
 
-    text_init(&tr, NULL, 0);
-
     module_name = memcheck(strdup(""));
 
     xfer_address = new_ex_lit(1);      /* The undefined transfer address */
+
+    text_init(&tr, NULL, 0);
 
     stack_init(&stack);
     /* Push the files onto the input stream in reverse order */
@@ -330,15 +330,12 @@ int main(
 
     assert(stack.top == NULL);
 
-    migrate_implicit();                /* Migrate the implicit globals */
-    write_globals(obj);                /* Write the global symbol dictionary */
+    //migrate_implicit();                /* Migrate the implicit globals */
+    //write_globals(obj);                /* Write the global symbol dictionary */
 
 #if 0
     sym_hist(&symbol_st, "symbol_st"); /* Draw a symbol table histogram */
 #endif
-
-
-    text_init(&tr, obj, 0);
 
     stack_init(&stack);                /* Superfluous... */
     /* Re-push the files onto the input stream in reverse order */
@@ -365,6 +362,14 @@ int main(
     sect_sp = -1;
     suppressed = 0;
 
+    text_init(&tr, NULL, 0);
+
+	//This works, fuck you
+     	assemble(&stack, &tr);
+
+    text_init(&tr, obj, 0);
+
+
     errcount = assemble_stack(&stack, &tr);
 
     text_flush(&tr);
@@ -378,7 +383,7 @@ int main(
     for (i = 0; i < nr_mlbs; i++)
         mlb_close(mlbs[i]);
 
-    write_endmod(obj);
+    //write_endmod(obj);
 
     if (obj != NULL)
         fclose(obj);

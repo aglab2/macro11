@@ -18,7 +18,6 @@
 #include "symbols.h"
 #include "parse.h"
 
-
 /* Allocate a new section */
 
 SECTION        *new_section(
